@@ -1,80 +1,133 @@
-"use client"
-import {Button} from "@/components/ui/button";
-import {Plus} from "lucide-react";
-import {useRouter} from "next/navigation";
-import {JobRequest} from "@/utils/types";
+"use client";
 
+import type { JobApplicationStatusList } from "@/utils/types";
+import { useQuery } from "@tanstack/react-query";
+import { fetchApplicationForCompanyJob } from "@/utils/ApisFunctions/JobsApi";
+import Spinner from "@/components/ui/Spinner";
+import { useGetUser } from "@/hooks/useGetUser";
+import Link from "next/link";
 
-export  default  function Page(){
-    const navigation=useRouter();
-     const jobRequests: JobRequest[] = [
+export default function Page() {
+  const { companyId } = useGetUser();
+  const { data, isLoading } = useQuery({
+    queryKey: ["ApplicantForCompanyJob"],
+    queryFn: () => fetchApplicationForCompanyJob(companyId),
+    enabled: !!companyId,
+  });
+
+  // fallback dummy data if API returns nothing
+  const jobRequests: JobApplicationStatusList = data || [
+    {
+      status: true,
+      statusAsText: "Approved",
+      applicantForCompanyJob: [
         {
-            requestID: 1,
-            companyID: 101,
-            jobID: 2001,
-            jobSeekerID: 3001,
-            firstName: "Ali",
-            lastName: "Benali",
-            wilayaName: "Algiers",
-            dateOfBirth: "1995-03-14T00:00:00Z",
-            gender: 0,
-            linkProfileLinkden: "https://linkedin.com/in/alibenali",
-            linkProfileGithub: "https://github.com/alibenali",
-            requestDate: "2024-12-10T15:30:00Z",
+          requestID: 1,
+          postedDate: "2025-04-24T10:00:00Z",
+          jobTitle: "Frontend Developer",
         },
         {
-            requestID: 2,
-            companyID: 102,
-            jobID: 2002,
-            jobSeekerID: 3002,
-            firstName: "Sara",
-            lastName: "Khellaf",
-            wilayaName: "Oran",
-            dateOfBirth: "1993-06-20T00:00:00Z",
-            gender: 1,
-            linkProfileLinkden: "https://linkedin.com/in/sarakhellaf",
-            linkProfileGithub: "https://github.com/sarakhellaf",
-            requestDate: "2025-01-05T10:15:00Z",
+          requestID: 2,
+          postedDate: "2025-04-23T14:30:00Z",
+          jobTitle: "Backend Developer",
+        },
+      ],
+    },
+    {
+      status: false,
+      statusAsText: "Rejected",
+      applicantForCompanyJob: [
+        {
+          requestID: 3,
+          postedDate: "2025-04-22T09:00:00Z",
+          jobTitle: "UI/UX Designer",
         },
         {
-            requestID: 3,
-            companyID: 103,
-            jobID: 2003,
-            jobSeekerID: 3003,
-            firstName: "Yacine",
-            lastName: "Bouaziz",
-            wilayaName: "Constantine",
-            dateOfBirth: "1990-11-01T00:00:00Z",
-            gender: 0,
-            linkProfileLinkden: "https://linkedin.com/in/yacinebouaziz",
-            linkProfileGithub: "https://github.com/yacinebouaziz",
-            requestDate: "2025-03-18T08:45:00Z",
+          requestID: 4,
+          postedDate: "2025-04-21T16:45:00Z",
+          jobTitle: "QA Engineer",
         },
-    ];
-    return (
-        <div className={"flex flex-col gap-4 p-4 w-full bg-white rounded-lg border-[1px] border-gray-200 "}>
-            <p className={"text-gray-950 text-xl font-medium"}>Mange Job offers</p>
+      ],
+    },
+    {
+      status: null,
+      statusAsText: "Pending",
+      applicantForCompanyJob: [
+        {
+          requestID: 5,
+          postedDate: "2025-04-25T11:15:00Z",
+          jobTitle: "DevOps Engineer",
+        },
+      ],
+    },
+  ];
 
-           <Button onClick={()=>navigation.push("/job-offer/new")} className={"flex items-center gap-1 bg-green-800 self-end"}>
-               <Plus className={"w-5 h-5 text-white"}/>
-               <span className={"text-sm text-white font-medium uppercase"}>add job offer</span>
-           </Button>
-            <p className={"text-gray-950 text-lg font-medium"}>Pending job offers</p>
-            <ul  >
-                {jobRequests.map((item) => (
-               <li key={item.jobSeekerID} className={"pl-4 bg-white flex items-center justify-between rounded-sm shadow-lg border-r-yellow-300 border-6 border-y-1 border-l-1"}>
-                    <div className={"flex flex-col gap-3"}>
-                      <a className={"text-blue-700 font-medium text-sm underline "} href={item.requestID}>JKHKIG</a>
-                      <p className={"text-[12px] text-gray-600 font-normal "}>Published on 20 March 2025</p>
-                    </div>
-                    <div className={"w-4 h-20 bg-yellow-300"}>
+  return (
+    <div className="flex flex-col gap-2 p-3 sm:p-4 h-full w-full bg-white rounded-lg border border-gray-200">
+      <p className="text-gray-950 text-lg sm:text-xl font-medium">
+        Manage Job offers
+      </p>
 
-                    </div>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        jobRequests.map((item) => (
+          <div key={item.statusAsText} className="mb-4">
+            {item.applicantForCompanyJob.length > 0 && (
+              <>
+                <p className="text-gray-950 text-lg sm:text-sm font-medium mb-2">
+                  {item.statusAsText}
+                </p>
+                <ul className="flex flex-col gap-2">
+                  {item.applicantForCompanyJob.map((j) => {
+                    const borderColorClass =
+                      item.status === true
+                        ? "border-r-green-500"
+                        : item.status === false
+                        ? "border-r-red-500"
+                        : "border-r-yellow-500";
 
-                </li>
-                ))}
+                    const bgColorClass =
+                      item.status === true
+                        ? "bg-green-500"
+                        : item.status === false
+                        ? "bg-red-500"
+                        : "bg-yellow-500";
 
-            </ul>
-        </div>
-    )
- }
+                    return (
+                      <li
+                        key={j.requestID}
+                        className={`
+                      pl-2 sm:pl-4 bg-white flex items-center justify-between
+                      rounded-lg shadow-lg
+                      border-y border-l 
+                      ${borderColorClass}
+                    `}
+                      >
+                        <div className="flex flex-col gap-2 sm:gap-3 py-2 sm:py-0">
+                          <Link
+                            href={`/aplay/${j.requestID}`}
+                            className="text-blue-700 font-medium text-xs sm:text-sm underline"
+                          >
+                            {j.jobTitle}
+                          </Link>
+                          <p className="text-[10px] sm:text-[12px] text-gray-600 font-normal">
+                            Published on{" "}
+                            {new Date(j.postedDate).toLocaleString()}
+                          </p>
+                        </div>
+                        <div
+                          className={`w-2 sm:w-4 h-16 sm:h-20 rounded-r-sm ${bgColorClass}`}
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
+            )}
+          </div>
+        ))
+      )}
+    </div>
+  );
+}

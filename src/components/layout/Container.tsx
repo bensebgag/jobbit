@@ -1,13 +1,18 @@
+import { RefObject } from "react";
+
 interface Props {
-    children?: React.ReactNode
-    styleElement?: string;
+  children?: React.ReactNode;
+  styleElement?: string;
+  ref?: RefObject<HTMLDivElement | null>;
 }
 
-export  default function Container( {children,styleElement}:Props ) {
-   return(
-  <div className={`max-w-[1400px] mx-auto ${styleElement}`}>
-       {children}
-   </div>
-       )
-
+export default function Container({ children, styleElement, ref }: Props) {
+  return (
+    <div
+      ref={ref}
+      className={`w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 ${styleElement}`}
+    >
+      {children}
+    </div>
+  );
 }
