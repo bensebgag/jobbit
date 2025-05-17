@@ -22,7 +22,6 @@ import {
   useRef,
   useState,
 } from "react";
-import gogoleIcon from "../../../public/Frame.png";
 import Field from "@/components/ui/Field";
 import Navigation from "@/components/ui/Navigation";
 import Footer from "@/components/layout/Footer";
@@ -329,39 +328,33 @@ function Step1({
         >
           <Field
             label={"Company Name"}
-            placeholder={"jobBit"}
+            placeholder={"nameExample"}
             icon={<QrCode />}
             register={register("name", { required: "Name is required" })}
           />
           {errors.name && (
-            <p className={"text-base md:text-lg font-medium text-red-500"}>
-              {errors.name.message}
-            </p>
+            <p className="text-red-600 text-xs ml-40">{errors.name.message}</p>
           )}
           <Field
             label={"Email Address"}
             style={"gap-4 md:gap-8"}
             type={"email"}
-            placeholder={"bensebgag258@gamil.com"}
+            placeholder={"eample8@gamil.com"}
             icon={<Mail />}
             register={register("email", { required: "Email is required" })}
           />
           {errors.email && (
-            <p className={"text-base md:text-lg font-medium text-red-500"}>
-              {errors.email.message}
-            </p>
+            <p className="text-red-600 text-xs ml-40">{errors.email.message}</p>
           )}
           <Field
             label={"Phone Number"}
             style={"gap-3 md:gap-6"}
-            placeholder={"0775680547"}
+            placeholder={"07*******"}
             icon={<Phone />}
             register={register("phone", { required: "Phone is required" })}
           />
           {errors.phone && (
-            <p className={"text-base md:text-lg font-medium text-red-500"}>
-              {errors.phone.message}
-            </p>
+            <p className="text-red-600 text-xs ml-40">{errors.phone.message}</p>
           )}
 
           <div className={"self-end flex gap-2 items-center"}>
@@ -467,15 +460,6 @@ function Step2({
           Candidate Registration/Information
         </p>
 
-        <Button
-          className={
-            "bg-white border-[2px] border-gray-500 rounded-full text-sm md:text-base text-gray-950 font-normal self-center hover:bg-blue-200 hover:text-gray-800 hover:cursor-pointer"
-          }
-        >
-          <p>Sign in with</p>
-          <Image src={gogoleIcon} alt={"gogle icon"} />
-        </Button>
-
         <div
           className={"flex-1 border-[1px] border-gray-200 my-2 md:my-4"}
         ></div>
@@ -487,20 +471,20 @@ function Step2({
           <Field
             label={"First Name"}
             style={"gap-6 md:gap-14"}
-            placeholder={"bensebgag"}
+            placeholder={"exmpleFirt"}
             icon={<CircleUserRound />}
             register={register("FirstName", {
               required: "First Name is required",
             })}
           />
           {errors.FirstName && (
-            <p className={"text-base md:text-lg font-medium text-red-500"}>
+            <p className="text-red-600 text-xs ml-40">
               {errors.FirstName.message}
             </p>
           )}
           <Field
             label={"Last Name"}
-            placeholder={"mohammed"}
+            placeholder={"exampleName"}
             style={"gap-6 md:gap-14"}
             icon={<CircleUserRound />}
             register={register("LastName", {
@@ -508,34 +492,30 @@ function Step2({
             })}
           />
           {errors.LastName && (
-            <p className={"text-base md:text-lg font-medium text-red-500"}>
+            <p className="text-red-600 text-xs ml-40">
               {errors.LastName.message}
             </p>
           )}
           <Field
             label={"Email Address"}
             type={"email"}
-            placeholder={"bensebgag258@gamil.com"}
+            placeholder={"emxample@gamil.com"}
             style={"gap-3 md:gap-6"}
             icon={<Mail />}
             register={register("Email", { required: "Email is required" })}
           />
           {errors.Email && (
-            <p className={"text-base md:text-lg font-medium text-red-500"}>
-              {errors.Email.message}
-            </p>
+            <p className="text-red-600 text-xs ml-40">{errors.Email.message}</p>
           )}
           <Field
             label={"Phone Number"}
-            placeholder={"0675680547"}
-            style={"gap-2 md:gap-3"}
+            placeholder={"06*******"}
+            style={"gap-2 md:gap-5"}
             icon={<Phone />}
             register={register("Phone", { required: "Phone is required" })}
           />
           {errors.Phone && (
-            <p className={"text-base md:text-lg font-medium text-red-500"}>
-              {errors.Phone.message}
-            </p>
+            <p className="text-red-600 text-xs ml-40">{errors.Phone.message}</p>
           )}
 
           <div className={"self-end flex gap-2 items-center"}>

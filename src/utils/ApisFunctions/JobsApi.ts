@@ -324,3 +324,12 @@ export const updateStatusJobRequest = async (
   );
   return data;
 };
+
+export const fetchJobsByTitles = async (): Promise<string[]> => {
+  try {
+    const res = await api.get("jobs/GetAllJobsTitles");
+    return res.data;
+  } catch (err) {
+    throw err;
+  }
+};

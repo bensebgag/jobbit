@@ -5,7 +5,7 @@ import logoImage from "../../../public/logo.png";
 import { Button } from "@/components/ui/button";
 import Model from "@/components/ui/Model";
 import { Dispatch, SetStateAction, useState, useEffect } from "react";
-import Field from "@/components/ui/Field";
+
 import { useRouter } from "next/navigation";
 import { User, Menu, X } from "lucide-react";
 import {
@@ -307,12 +307,12 @@ export function Login({
       setIsLoggedIn(true);
       onClose(false);
       toast.success("Login successfully!");
-      window.dispatchEvent(new Event("local-storage-change")); // 👈 Custom event
-      window.dispatchEvent(new Event("storage")); // 👈 For cross-tab sync
+      window.dispatchEvent(new Event("local-storage-change"));
+      window.dispatchEvent(new Event("storage"));
       document.body.style.overflow = "";
     },
     onError() {
-      toast.error("invalid email or password");
+      toast.error("Invalid email or password");
     },
   });
 
@@ -325,12 +325,12 @@ export function Login({
         setIsLoggedIn(true);
         onClose(false);
         toast.success("Login successfully!");
-        window.dispatchEvent(new Event("local-storage-change")); // 👈 Custom event
-        window.dispatchEvent(new Event("storage")); // 👈 For cross-tab sync
+        window.dispatchEvent(new Event("local-storage-change"));
+        window.dispatchEvent(new Event("storage"));
         document.body.style.overflow = "";
       },
       onError() {
-        toast.error("invalid email or password");
+        toast.error("Invalid email or password");
       },
     });
 
@@ -345,88 +345,172 @@ export function Login({
   };
 
   return (
-    <form
-      className="flex flex-col p-3 md:p-4 gap-4 md:gap-5"
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <p className="text-gray-950 text-lg md:text-xl font-bold">Login</p>
+    <div className="bg-white p-6 md:p-8 rounded-xl shadow-lg max-w-md w-full mx-auto">
+      <form
+        className="flex flex-col gap-5 md:gap-6"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div className="text-center mb-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+            Welcome Back
+          </h2>
+          <p className="text-gray-500 text-sm md:text-base mt-1">
+            Sign in to your account
+          </p>
+        </div>
 
-      <Controller
-        name="role"
-        control={control}
-        render={({ field }) => (
-          <RadioGroup
-            className="flex self-center items-center gap-6 md:gap-8"
-            value={field.value}
-            onValueChange={field.onChange}
-          >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="User" id="role-user" />
-              <Label htmlFor="role-user">User</Label>
+        <Controller
+          name="role"
+          control={control}
+          render={({ field }) => (
+            <div className="bg-gray-50 p-3 rounded-lg">
+              <p className="text-xs text-gray-500 mb-2 font-medium">
+                ACCOUNT TYPE
+              </p>
+              <RadioGroup
+                className="flex justify-center items-center gap-8 md:gap-12"
+                value={field.value}
+                onValueChange={field.onChange}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value="User"
+                    id="role-user"
+                    className="text-blue-600"
+                  />
+                  <Label htmlFor="role-user" className="font-medium">
+                    Job Seeker
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value="Company"
+                    id="role-company"
+                    className="text-blue-600"
+                  />
+                  <Label htmlFor="role-company" className="font-medium">
+                    Company
+                  </Label>
+                </div>
+              </RadioGroup>
             </div>
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="Company" id="role-company" />
-              <Label htmlFor="role-company">Company</Label>
+          )}
+        />
+
+        <div className="space-y-4">
+          {/* Email Field */}
+          <div className="space-y-2">
+            <Label
+              htmlFor="email"
+              className="text-sm font-medium text-gray-700"
+            >
+              Email Address
+            </Label>
+            <div className="relative">
+              <input
+                id="email"
+                type="email"
+                className={`w-full px-4 py-2 bg-gray-50 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 ${
+                  errors.email
+                    ? "border-red-500 focus:ring-red-200"
+                    : "border-gray-200 focus:ring-blue-200"
+                }`}
+                placeholder="name@example.com"
+                {...register("email", { required: "Email is required" })}
+              />
             </div>
-          </RadioGroup>
-        )}
-      />
+            {errors.email && (
+              <p className="text-red-600 text-xs">{errors.email.message}</p>
+            )}
+          </div>
 
-      <div className="flex-1 border-[1px] border-gray-200 my-2 md:my-4" />
+          {/* Password Field */}
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <Label
+                htmlFor="password"
+                className="text-sm font-medium text-gray-700"
+              >
+                Password
+              </Label>
+            </div>
+            <div className="relative">
+              <input
+                id="password"
+                type="password"
+                className={`w-full px-4 py-2 bg-gray-50 border rounded-lg text-gray-800 focus:outline-none focus:ring-2 ${
+                  errors.password
+                    ? "border-red-500 focus:ring-red-200"
+                    : "border-gray-200 focus:ring-blue-200"
+                }`}
+                placeholder="••••••••"
+                {...register("password", {
+                  required: "Password is required",
+                })}
+              />
+            </div>
+            {errors.password && (
+              <p className="text-red-600 text-xs">{errors.password.message}</p>
+            )}
+          </div>
+        </div>
 
-      {/* Email Field */}
-      <Field
-        label="Email"
-        style="gap-3 md:gap-14"
-        placeholder="Email"
-        type="email"
-        register={register("email", { required: "Email is required" })}
-      />
-      {errors.email && (
-        <p className="text-red-600 text-xs md:text-sm">
-          {errors.email.message}
-        </p>
-      )}
-
-      <Field
-        label="Password"
-        placeholder="Password"
-        type="password"
-        register={register("password", {
-          required: "Password is required",
-        })}
-      />
-      {errors.password && (
-        <p className="text-red-600 text-xs md:text-sm">
-          {errors.password.message}
-        </p>
-      )}
-
-      <a className="text-xs md:text-sm underline font-medium text-cyan-500 self-end">
-        Forgot your password?
-      </a>
-
-      <div className="flex flex-col sm:flex-row sm:self-end gap-4">
-        <label className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            className="w-3 h-3 md:w-4 md:h-4 hover:cursor-pointer"
-            {...register("remember")}
-          />
-          <span className="text-gray-950 font-medium text-sm md:text-lg">
-            Remember me
-          </span>
-        </label>
+        <div className="flex items-center">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input
+              type="checkbox"
+              className="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              {...register("remember")}
+            />
+            <span className="text-gray-600 text-sm">Remember me</span>
+          </label>
+        </div>
 
         <Button
           type="submit"
-          className="bg-blue-500 text-white font-medium text-sm"
+          className="w-full flex justify-center py-2.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition duration-200 ease-in-out transform hover:translate-y-px focus:outline-none focus:ring-2 focus:ring-blue-300"
           disabled={isPending || isLoginCompany}
         >
-          {isPending || isLoginCompany ? "Login..." : "LOGIN"}
+          {isPending || isLoginCompany ? (
+            <div className="flex items-center gap-2">
+              <svg
+                className="animate-spin h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              <span>Signing in...</span>
+            </div>
+          ) : (
+            "Sign In"
+          )}
         </Button>
-      </div>
-    </form>
+
+        <div className="text-center text-sm text-gray-500">
+          Don't have an account?{" "}
+          <Link
+            href="/auth"
+            className="font-medium text-blue-600 hover:text-blue-800 hover:underline"
+          >
+            Register
+          </Link>
+        </div>
+      </form>
+    </div>
   );
 }
 

@@ -1,7 +1,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://2c2a6c1716eedb67b64c89482df57c15.serveo.net/api/",
+  baseURL: "https://8a50c4b0a2b09a7795f7d582cf3c0cc8.serveo.net/api/",
+
   headers: {
     "Content-Type": "application/json",
   },

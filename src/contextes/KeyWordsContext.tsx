@@ -5,10 +5,13 @@ import {
   useContext,
   ReactNode,
   useEffect,
+  Dispatch,
+  SetStateAction,
 } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchFilteredJobs } from "@/utils/ApisFunctions/JobsApi";
-import { Job, keyWords } from "@/utils/types";
+import { Job, JobDetails, keyWords } from "@/utils/types";
+import toast from "react-hot-toast";
 interface filtersCat {
   wilayaIDs: number[];
   skillsIDs: number[];
@@ -29,6 +32,7 @@ type KeyWordsContextType = {
   setJobExperienceIDs: React.Dispatch<React.SetStateAction<number[]>>;
   setWilayaIDs: React.Dispatch<React.SetStateAction<number[]>>;
   setSkillsIDs: React.Dispatch<React.SetStateAction<number[]>>;
+  setTitleJob: Dispatch<SetStateAction<string>>;
   isLoading: boolean;
   isError: boolean;
   error: Error;
@@ -78,6 +82,7 @@ export const KeyWordsContextProvider = ({
   children,
 }: KeyWordsProviderProps): JSX.Element => {
   const [keyWords, setKeyWords] = useState<keyWords[]>([]);
+  const [titleJob, setTitleJob] = useState<string>("");
 
   const [wilayaIDs, setWilayaIDs] = useState<number[]>([]);
   const [skillsIDs, setSkillsIDs] = useState<number[]>([]);
@@ -102,6 +107,18 @@ export const KeyWordsContextProvider = ({
         return setSkillsIDs([...skillsIDs, keyWordG.id]);
     }
   }
+
+  function getMetchTilte(title: string) {
+    const result: JobDetails[] = [];
+    jobFilters?.forEach((job) => {
+      if (job.title.toLowerCase() === title.toLowerCase()) {
+        result.push(job);
+      }
+    });
+
+    return result;
+  }
+
   useEffect(() => {
     if (jobTypeIDs.length > 1) {
       setShowAll(true);
@@ -131,12 +148,13 @@ export const KeyWordsContextProvider = ({
       jobExperienceIDs,
     ],
     queryFn: () => fetchFilteredJobs(filtersCat),
-    onError: (error) => {
-      console.log("Error fetching filtered jobs:", error);
+    onError: () => {
+      toast.error("Error fetching filtered jobs");
     },
   });
 
-  const dataFilter = jobFilters;
+  const dataFilter =
+    titleJob.length === 0 ? jobFilters : getMetchTilte(titleJob);
 
   return (
     <KeyWordsContext.Provider
@@ -152,6 +170,7 @@ export const KeyWordsContextProvider = ({
         setJobExperienceIDs,
         setSkillsIDs,
         setWilayaIDs,
+        setTitleJob,
         isLoading,
         isError,
         error,
